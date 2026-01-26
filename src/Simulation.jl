@@ -3,7 +3,7 @@ module Simulation
 using IonSim
 using QuantumOptics
 
-export run_simulation
+export run_simulation, run_simulation_hamiltonian
 
     function run_simulation(chamber, tspan)
         
@@ -27,6 +27,19 @@ export run_simulation
         excited_pop = expect(ionprojector(chamber, "e"), sol)
         return tout, excited_pop
 
+    end
+
+    function run_simulation_hamiltonian(t, h, tspan)
+         mode = zmodes(t)[1]
+        C = Ca40([("S1/2", -1/2, "g"),("D5/2", -1/2, "e")])
+        H = hamiltonian(t, rwa_cutoff=Inf)
+        ψ_mode = fockstate(mode[1].basis, 0)
+        ψ₀ = C["g"] ⊗ ψ_mode
+        tout, sol = timeevolution.schroedinger_dynamic(tspan, ψ₀, h)
+        # ψ_mode = fockstate(mode[1].basis, 0)
+        # ψ₀ = C["g"] ⊗ ψ_mode
+        excited_pop = expect(ionprojector(t, "e"), sol)
+        return tout, excited_pop
     end
 
 end

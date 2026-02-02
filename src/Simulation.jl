@@ -32,7 +32,7 @@ export run_simulation, run_simulation_hamiltonian
     function run_simulation_hamiltonian(t, h, tspan)
          mode = zmodes(t)[1]
         C = Ca40([("S1/2", -1/2, "g"),("D5/2", -1/2, "e")])
-        H = hamiltonian(t, rwa_cutoff=Inf)
+        H = hamiltonian(t,  rwa_cutoff=Inf)
         ψ_mode = fockstate(mode[1].basis, 0)
         ψ₀ = C["g"] ⊗ ψ_mode
         tout, sol = timeevolution.schroedinger_dynamic(tspan, ψ₀, h)
